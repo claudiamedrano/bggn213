@@ -1,2 +1,2 @@
-# bggn213
-classwork for bggn213
+Bioinformatics Class
+classwork for BGGN213
