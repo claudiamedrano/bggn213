@@ -1,0 +1,23 @@
+---
+title: "Class 6 R Functions"
+author: "Claudia Medrano"
+date: "10/18/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r cars}
+summary(cars)
+```
+# This is a H1
+This is my class 6 work. This will be **bold**
+
+## A H2
+
+### A level 3 heading H3
+```{r}
+plot(1:10)
+```

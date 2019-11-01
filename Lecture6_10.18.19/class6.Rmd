@@ -1,0 +1,154 @@
+---
+title: "Class 6 practice"
+author: "Claudia Medrano"
+date: "10/18/2019"
+output: html_document
+---
+
+```{r}
+read.table("test1.txt", sep = ",",  header = TRUE)
+```
+
+```{r}
+read.table("test2.txt", sep = "$", header = TRUE)
+```
+
+```{r}
+read.table("test3.txt")
+```
+
+```{r}
+add <- function(x, y=1) {
+ # Sum the input x and y
+ x + y
+}
+```
+
+```{r}
+add( x = c(5,6), y = 100)
+```
+
+
+```{r}
+add( c(5, 5, NA, 7) )
+```
+
+
+
+
+
+
+```{r}
+min(c(5, 2, 7, 10))
+```
+```{r}
+range(c(5,2,7,10))
+```
+
+
+```{r}
+rescale <- function(x) {
+ rng <-range(x)
+ (x - rng[1]) / (rng[2] - rng[1])
+}
+
+```
+
+```{r}
+rescale(1:10)
+```
+
+```{r}
+rescale(c(1,2,NA,3,10))
+```
+
+```{r}
+x <- c(1,2,NA,5)
+range(x)
+```
+
+flip the na.rm to be true (default is false)
+```{r}
+rescale2 <- function(x) {
+ rng <-range(x, na.rm = TRUE)
+ (x - rng[1]) / (rng[2] - rng[1])
+}
+```
+
+```{r}
+rescale2 <- function(x)
+  rng <- range(x, na.rm = TRUE)
+
+```
+
+```{r}
+rescale2(c(1,2,NA,3,10))
+```
+
+install the bio3d package with
+```{r}
+#install.packages("bio3d")
+```
+
+Exercise 1B
+
+```{r}
+#use library to load a package
+library(bio3d)
+
+#improving analysis code
+library(bio3d)
+s1 <- read.pdb("4AKE") # kinase with drug
+s2 <- read.pdb("1AKE") # kinase no drug
+s3 <- read.pdb("1E4Y") # kinase with drug
+
+#make vector for entries
+entries <- c("4AKE", "1AKE", "1E4Y")
+
+#use read.pdb on each entry in entries vector
+#for(x in entries) {
+ # s_pdb <- read.pdb(x)
+#}
+
+s1.chainA <- trim.pdb(s1, chain="A", elety="CA")
+s2.chainA <- trim.pdb(s2, chain="A", elety="CA")
+s3.chainA <- trim.pdb(s3, chain="A", elety="CA")
+
+#trim the lists in s_pdb and assign to new vector s_chain A
+#for(s in s_pdb) {
+ # s_chainA <- trim.pdb(s, chain="A", elety="CA")
+#}
+
+s1.b <- s1.chainA$atom$b
+s2.b <- s2.chainA$atom$b
+s3.b <- s3.chainA$atom$b
+
+#
+#for(chain in s_chainA) {
+ # s.b_vector <- chain$atom$b
+#}
+  
+plotb3(s1.b, sse=s1.chainA, typ="l", ylab="Bfactor")
+plotb3(s2.b, sse=s2.chainA, typ="l", ylab="Bfactor")
+plotb3(s3.b, sse=s3.chainA, typ="l", ylab="Bfactor")
+
+#plot 
+#for(s.b in s.b_vector) {
+#  plotb3(s.b, )
+#}
+```
+
+Q1. What type of object is returned from the read.pdb() function?
+ list 
+
+Q2. What does the trim.pdb() function do?
+makes the PDB object smaller by including only some subsets
+
+Q3. What input parameter would turn off the marginal black and grey rectangles in the
+plots and what do they represent in this case?
+Q4. What would be a better plot to compare across the different proteins?
+Q5. Which proteins are more similar to each other in their B-factor trends. How could
+you quantify this? HINT: try the rbind(), dist() and hclust() functions together with a
+resulting dendrogram plot. Look up the documentation to see what each of these
+functions does.
+
