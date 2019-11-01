@@ -2,7 +2,7 @@
 title: "Class 7 R functions and packages"
 author: "Claudia Medrano"
 date: "10/23/2019"
-output: html_document
+output: github_document
 ---
 
 ```{r setup, include=FALSE}
@@ -26,15 +26,12 @@ rescale(c(3,10,NA,7))
 rescale( c(1,10,"string") )
 
 ```{r}
-rescale(c(3,10,NA,"Barry"))
+rescale(c(3,10,NA))
 ```
 
 
 stop("some message") to report on unexpected input type or other problem early in a function
-```{r}
-rescale2(c(3,10,NA,"Barry"))
-
-```
+rescale2(c(3,10,NA,"Barry")) would give an error
 
 #write a function both_na()
 We want to write a function, called both_na(),
@@ -79,7 +76,6 @@ both_na(x,y3)
 #error due to recycling
 ```
 
-```{r}
 both_na2 <- function(x,y) {
  if(length(x) != length(y)) {
    stop("vector lengths are not the same")
@@ -88,7 +84,7 @@ both_na2 <- function(x,y) {
 }
 
 both_na2(x, y3)
-```
+
 
 
 Write a function grade() to determine an overall
