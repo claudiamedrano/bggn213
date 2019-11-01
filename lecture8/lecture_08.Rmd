@@ -1,0 +1,235 @@
+---
+title: "class_08"
+author: "Claudia Medrano"
+date: "10/25/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+# Generate some example data for clustering
+tmp <- c(rnorm(30,-3), rnorm(30,3))
+x <- cbind(x=tmp, y=rev(tmp))
+
+plot(x)
+```
+
+Use the kmeans() function setting k to 2 and nstart=20
+
+
+```{r}
+k <-  kmeans(x, centers = 2, nstart = 20)
+
+```
+ 
+Inspect/print the results
+```{r}
+k
+```
+
+Q. How many points are in each cluster?
+```{r}
+k$size
+```
+
+Q. What ‘component’ of your result object details
+ - cluster size?
+ size
+ - cluster assignment/membership?
+```{r}
+k$cluster
+```
+```{r}
+table(k$cluster)
+```
+ 
+ - cluster center?
+```{r}
+
+```
+ 
+ 
+Plot x colored by the kmeans cluster assignment and
+ add cluster centers as blue points
+ 
+```{r}
+plot(x, col = k$cluster)
+points(k$centers, col="blue", pch = 15)
+```
+ 
+ ##Hierarchical clustering in R
+ Call:
+hclust(d = dist_matrix)
+Cluster method : complete
+Distance : euclidean
+Number of objects: 60 
+```{r}
+hc <- hclust(dist(x))
+```
+plot my results
+```{r}
+plot(hc)
+#draws the red line at specified height
+abline(h=6,col="red")
+abline(h=4,col="blue")
+cutree(hc, h=6)
+```
+
+```{r}
+grps <- cutree(hc, h=4)
+table(grps)
+```
+
+I can also cut the tree to yield a given 'k' groups/clusters
+```{r}
+grps <- cutree(hc, k=2)
+plot(x, col=grps)
+```
+
+##Another cluster example
+Here we have some more realistic 
+```{r}
+# Step 1. Generate some example data for clustering
+x <- rbind(
+ matrix(rnorm(100, mean=0, sd = 0.3), ncol = 2),
+ matrix(rnorm(100, mean = 1, sd = 0.3), ncol = 2),
+ matrix(c(rnorm(50, mean = 1, sd = 0.3),
+ rnorm(50, mean = 0, sd = 0.3)), ncol = 2))
+colnames(x) <- c("x", "y")
+# Step 2. Plot the data without clustering
+plot(x)
+# Step 3. Generate colors for known clusters
+# (just so we can compare to hclust results)
+col <- as.factor( rep(c("c1","c2","c3"), each=50) )
+plot(x, col=col)
+```
+ 
+ Use the dist(), hclust(), plot() and 
+```{r}
+grps <- hclust(dist(x))
+plot(grps)
+abline(h=2.4,col="blue")
+abline(h=2, col="red")
+```
+ cutree() functions to return 2 and 3 clusters
+```{r}
+grps <- cutree(hc,h=1.8)
+plot(grps,col=col)
+```
+ 
+Q. How does this compare to your known 'col' groups?
+
+
+##Hands on PCA
+```{r}
+mydata <- read.csv("https://tinyurl.com/expression-CSV",
+ row.names=1) 
+
+head(mydata)
+```
+
+call prcomp on data set. we need to take the 't()' of our data
+```{r}
+pca <- prcomp(t(mydata), scale=TRUE) 
+attributes(pca)
+nrow(mydata)
+ncol(mydata)
+```
+```{r}
+pca$x
+```
+
+plot PCA1 vs PCA2
+```{r}
+plot(pca$x[,1], pca$x[,2])
+```
+
+```{r}
+summary(pca)
+```
+
+```{r}
+pca.var <- pca$sdev^2
+pca.var.per <- round(pca.var/sum(pca.var)*100, 1)
+
+barplot(pca.var.per, main="Scree Plot",
+ xlab="Principal Component", ylab="Percent Variation")
+
+```
+
+```{r}
+plot(pca$x[,1:2], col=c("red", "red", "red", "red", "red", "blue", "blue", "blue", "blue", "blue"))
+```
+
+##Perform a PCA on the UK foods dataset
+```{r}
+x <- read.csv(file = "data/UK_foods.csv")
+```
+Q1. How many rows and columns are in your new data frame named x? What R functions could you use to answer this questions?
+```{r}
+ncol(x)
+nrow(x)
+```
+
+Preview the first 6 rows
+```{r}
+head(x)
+```
+```{r}
+rownames(x) <- x[,1]
+x <- x[,-1]
+head(x)
+```
+
+alternative to fixing the columns 
+```{r}
+x <- read.csv(file = "data/UK_foods.csv", row.names = 1)
+head(x)
+```
+
+Q2. Which approach to solving the ‘row-names problem’ mentioned above do you prefer and why? Is one approach more robust than another under certain circumstances?
+set the row.names when loading the data table
+
+```{r}
+barplot(as.matrix(x), beside=T, col=rainbow(nrow(x)))
+```
+
+Q3: Changing what optional argument in the above barplot() function results in the following plot?
+
+
+```{r}
+barplot(as.matrix(x), beside=F, col=rainbow(nrow(x)))
+```
+
+Q5: Generating all pairwise plots may help somewhat. Can you make sense of the following code and resulting figure? What does it mean if a given point lies on the diagonal for a given plot?
+```{r}
+pairs(x, col=rainbow(10), pch=16)
+```
+
+Use PCA
+```{r}
+pca <- prcomp(t(x))
+summary(pca)
+```
+
+plot
+```{r}
+plot(pca$x[,1:2])
+```
+
+```{r}
+plot(pca$x[,1:2], xlab="PC1", ylab="PC2", xlim=c(-270,500))
+text(pca$x[,1], pca$x[,2], colnames(x))
+abline(h=0, col="gray", lt=2)
+abline(v=0, col="gray", lt=2)
+```
+
+Lets focus on PC1 as it accounts for > 90% of variance 
+```{r}
+par(mar=c(10, 3, 0.35, 0))
+barplot( pca$rotation[,1], las=2 )
+```
+
